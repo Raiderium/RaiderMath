@@ -37,11 +37,12 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 
 	F f[D] = 0;
 
-	this(T)(in T s) if(isVecType!T) 	{ f[] = cast(F)s; }
-	this(T)(in T* o) if(isVecType!T) 	{ mixin(fer!("f[x] = cast(F) o[x];")); }
-	this(T)(in T[D] o) if(isVecType!T) 	{ mixin(fer!("f[x] = cast(F) o[x];")); }
-	this(T)(in Vec!(D, T) o) 			{ mixin(fer!("f[x] = cast(F) o[x];")); }
-	void opAssign(T)(in Vec!(D, T) o)	{ mixin(fer!("f[x] = cast(F) o[x];")); }
+	this(T)(in T s)    if(isVecType!T) { f[] = cast(F)s; }
+	this(T)(in T* o)   if(isVecType!T) { mixin(fer!("f[x] = cast(F) o[x];")); }
+	this(T)(in T[] o)  if(isVecType!T) { mixin(fer!("if(x < o.length) f[x] = cast(F)o[x];")); }
+	//this(T)(in T[D] o) if(isVecType!T) { mixin(fer!("f[x] = cast(F) o[x];")); }
+	this(T)(in Vec!(D, T) o)           { mixin(fer!("f[x] = cast(F) o[x];")); }
+	void opAssign(T)(in Vec!(D, T) o)  { mixin(fer!("f[x] = cast(F) o[x];")); }
 
 	//TODO Why do method overloads need the same template parameters?
 	static if(D == 2) this(T=int)(in F x, in F y) 					{ f = [x, y]; }
@@ -131,9 +132,9 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	///Returns a copy with the absolute value of each element.
-	Vec!(D, F) abs()
+	Vec_ abs()
 	{
-		Vec!(D, F) r;
+		Vec_ r;
 		mixin(fer!("r[x] = std.math.abs(f[x]);"));
 		return r;
 	}
