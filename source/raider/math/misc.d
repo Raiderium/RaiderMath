@@ -1,4 +1,4 @@
-module raider.math.tools;
+module raider.math.misc;
 
 import std.math;
 import raider.math.vec;
