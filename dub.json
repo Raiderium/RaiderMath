@@ -7,4 +7,8 @@
 
     "targetName": "RaiderMath",
     "targetPath": "lib",
+
+    "dependencies": {
+		"raider-tools": "~master"
+    }
 }

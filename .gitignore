@@ -1,4 +1,5 @@
-lib
-bin
-.dub
-*.userprefs
+/*
+!/source
+!dub.json
+!LICENSE
+!README
