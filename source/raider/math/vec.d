@@ -42,7 +42,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	this(T)(in T[] o)  if(isVecType!T) { mixin(fer!("if(x < o.length) f[x] = cast(F)o[x];")); }
 	//this(T)(in T[D] o) if(isVecType!T) { mixin(fer!("f[x] = cast(F) o[x];")); }
 	this(T)(in Vec!(D, T) o)           { mixin(fer!("f[x] = cast(F) o[x];")); }
-	void opAssign(T)(in Vec!(D, T) o)  { mixin(fer!("f[x] = cast(F) o[x];")); }
+	void opAssign(T)(auto ref in Vec!(D, T) o) if(!is(T == F)) { mixin(fer!("f[x] = cast(F) o[x];")); }
 
 	//TODO Why do method overloads need the same template parameters?
 	static if(D == 2) this(T=int)(in F x, in F y) 					{ f = [x, y]; }
@@ -64,7 +64,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	//this op= vec
-	void opOpAssign(string op, T)(Vec!(D, T) o)
+	void opOpAssign(string op, T)(auto ref in Vec!(D, T) o)
 	{
 		mixin(fer!("f[x]" ~ op ~ "= o.f[x];"));
 	}
@@ -78,7 +78,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	//op this
 	Vec_ opUnary(string s)() if(s == "-")
 	{
-		Vec_ result;
+		Vec_ result = void;
 		mixin(fer!("result[x] = -f[x];"));
 		return result;
 	}
@@ -86,7 +86,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	static if(isMatType!F)
 	{
 		//vec = this * matrix
-		Vec_ opBinary(string op, T)(Mat!(D, T) o) if(op == "*")
+		Vec_ opBinary(string op, T)(auto ref in Mat!(D, T) o) if(op == "*")
 		{
 			Vec_ result;
 			for(uint r=0; r<D; r++)
@@ -97,17 +97,17 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	//vec = this op vec
-	Vec!(D, typeof(T + F)) opBinary(string op, T)(Vec!(D, T)o)
+	Vec!(D, typeof(T + F)) opBinary(string op, T)(auto ref in Vec!(D, T)o)
 	{
-		typeof(return) r;
-		mixin(fer!("r[x] = f[x]" ~ op ~ " o.f[x];"));
+		typeof(return) r = void;
+		mixin(fer!("r[x] = f[x]" ~ op ~ " o[x];"));
 		return r;
 	}
 
 	//vec = this op scalar
 	Vec!(D, typeof(T + F)) opBinary(string op, T)(T o) if(isVecType!T)
 	{
-		typeof(return) r;
+		typeof(return) r = void;
 		mixin(fer!("r[x] = f[x]" ~ op ~ " o;"));
 		return r;
 	}
@@ -134,13 +134,13 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	///Returns a copy with the absolute value of each element.
 	Vec_ abs()
 	{
-		Vec_ r;
+		Vec_ r = void;
 		mixin(fer!("r[x] = std.math.abs(f[x]);"));
 		return r;
 	}
 
 	///Angle 'twixt this and another vec with same dimensions.
-	double angle(T)(Vec!(D, T) o)
+	double angle(T)(auto ref in Vec!(D, T) o)
 	{
 		Vec!(D, double) v = o;
 		Vec!(D, double) t = this;
@@ -150,7 +150,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	///Dot product with another vec with same dimensions.
-	double dot(T)(Vec!(D, T) o)
+	double dot(T)(auto ref in Vec!(D, T) o)
 	{
 		double result = 0.0;
 		mixin(fer!("result += f[x] * o[x];"));
