@@ -10,6 +10,19 @@ T clamp(T)(T f, T min, T max)
 	return f;
 }
 
+bool isZero(T)(T f)
+{
+	return fabs(f) < T.epsilon;
+}
+
+bool eq(T)(T a, T b)
+{
+	T ab = fabs(a - b);
+	if(ab < T.epsilon) return true;
+	a = abs(a); b = abs(b);
+	return ab < F.epsilon * (b > a ? b : a);
+}
+
 ///Next higher power of two
 size_t nhpo2(size_t x)
 {

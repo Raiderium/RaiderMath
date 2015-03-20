@@ -4,6 +4,7 @@ import std.conv;
 import std.math;
 
 import raider.math.mat;
+import raider.math.misc : eq;
 
 alias Vec!(2, double) vec2;
 alias Vec!(3, double) vec3;
@@ -23,6 +24,7 @@ package template isVecType(T)
 	const isVecType = is(T == double) || is(T == float) || is(T == int) || is(T == uint);
 }
 
+//TODO Force compile-time unrolling
 private template fer(string stuff)
 {
 	const char[] fer = "foreach(x; 0..D) {" ~ stuff ~ "}";
@@ -73,6 +75,21 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	void opOpAssign(string op, T)(T o) if(isVecType!T)
 	{
 		mixin(fer!("f[x]" ~ op ~ "= o;"));
+	}
+
+	static if(is(F == float) || is(F == double))
+	{
+		bool isZero()
+		{
+			foreach(x; 0..D) if(fabs(f[x]) < F.epsilon) return false;
+			return true;
+		}
+
+		bool eq()(auto ref in Vec_ o)
+		{
+			foreach(x; 0..D) if(!eq(f[x], o[x])) return false;
+			return true;
+		}
 	}
 
 	//op this
@@ -149,14 +166,6 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 		return acos(t.dot(v));
 	}
 
-	///Dot product with another vec with same dimensions.
-	double dot(T)(auto ref in Vec!(D, T) o)
-	{
-		double result = 0.0;
-		mixin(fer!("result += f[x] * o[x];"));
-		return result;
-	}
-
 	///Set length to 1.
 	void normalize()
 	{
@@ -166,7 +175,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	///Clamp length between a minimum and maximum value.
 	void clampLength(double min, double max)
 	{
-		double length2 = dot(this);
+		double length2 = dot(this, this);
 		if(length2 != 0.0)
 		{
 			if(length2 > max*2) this *= max / sqrt(length2);
@@ -179,13 +188,19 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	///Length of vector.
 	@property double length()
 	{
-		return sqrt(dot(this));
+		return sqrt(dot(this, this));
+	}
+
+	///Squared length of vector.
+	@property double lengthSquared()
+	{
+		return dot(this, this);
 	}
 
 	///ditto
 	@property void length(double value)
 	{
-		double length2 = dot(this);
+		double length2 = dot(this, this);
 		if(length2 != 0.0) this *= (value / sqrt(length2));
 	}
 
@@ -201,28 +216,36 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 			f[1] = -temp;
 		}
 	}
+}
 
-	static if(D == 3 && (is(F == double) || is(F == float)))
-	{
-		/**
-		 * Cross product.
-		 * 
-		 * With your right hand, point index finger forwards,
-		 * middle finger to the left, and thumb upwards. 
-		 * thumb = index.cross(middle)
-		 * 
-		 * In other words, this is a right cross. Powie!
-		 * Only available on vec3 and vec3f.
-		 */
-		Vec!(D, F) cross(Vec!(D, F) o)
-		{
-			return Vec!(D, F)(
-				f[1]*o[2] - f[2]*o[1],
-				f[2]*o[0] - f[0]*o[2],
-				f[0]*o[1] - f[1]*o[0]);
-		}
-	}
+/**
+ * Dot product
+ */
+double dot(int D, T)(auto ref in Vec!(D, T) a, auto ref in Vec!(D, T) b)
+{
+	double r = 0.0;
+	mixin(fer!("r += a[x] * b[x];"));
+	return r;
+}
 
+/**
+ * Cross product.
+ * 
+ * With your right hand, point index finger forwards,
+ * middle finger to the left, and thumb upwards. 
+ * thumb = cross(index, middle)
+ * 
+ * In other words, this is a right cross. Powie!
+ * Only available on vec3 and vec3f.
+ */
+Vec!(3, F) cross(F)(auto ref in Vec!(3, F) a, auto ref in Vec!(3, F) b) 
+	if(is(F == float) || is(F == double))
+{
+	Vec!(3, F) r = void;
+	r[0] = a[1] * b[2] - a[2] * b[1];
+	r[1] = a[2] * b[0] - a[0] * b[2];
+	r[2] = a[0] * b[1] - a[1] * b[0];
+	return r;
 }
 
 unittest
