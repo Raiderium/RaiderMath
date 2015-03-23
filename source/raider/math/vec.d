@@ -81,7 +81,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	{
 		bool isZero()
 		{
-			foreach(x; 0..D) if(fabs(f[x]) < F.epsilon) return false;
+			foreach(x; 0..D) if(fabs(f[x]) > F.epsilon) return false;
 			return true;
 		}
 
