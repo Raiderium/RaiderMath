@@ -1,5 +1,6 @@
 {
     "name": "raider-math",
+    "version": "0.0.1",
     "description": "A small math library in D.",
     "homepage": "https://github.com/Raiderium/RaiderMath",
     "license": "MIT",
@@ -9,6 +10,8 @@
     "targetPath": "lib",
 
     "dependencies": {
-		"raider-tools": "~master"
+		"derelict-util": ">0.0.0",
+		"derelict-physfs": ">0.0.0",
+		"raider-tools": ">0.0.0"
     }
 }
