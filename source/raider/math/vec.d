@@ -37,7 +37,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 
 	alias Vec!(D, F) Vec_;
 
-	F f[D] = 0;
+	F[D] f = 0;
 
 	this(T)(in T s)    if(isVecType!T) { f[] = cast(F)s; }
 	this(T)(in T* o)   if(isVecType!T) { mixin(fer!("f[x] = cast(F) o[x];")); }

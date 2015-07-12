@@ -10,8 +10,6 @@
     "targetPath": "lib",
 
     "dependencies": {
-		"derelict-util": ">0.0.0",
-		"derelict-physfs": ">0.0.0",
 		"raider-tools": ">0.0.0"
     }
 }

@@ -25,8 +25,8 @@ struct Mat(int _D, _F) if(2 <= _D && _D <= 4 && isMatType!_F)
 
 	union
 	{
-		F f[D*D] = 0;
-		Vec_ v[D];
+		F[D*D] f = 0;
+		Vec_[D] v;
 	}
 
 	static if(D == 2)
