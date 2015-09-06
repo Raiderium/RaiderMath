@@ -1,7 +1,7 @@
 module raider.math.curve;
 
 import raider.tools.array;
-import raider.math.all;
+import raider.math;
 
 /**
  * Animated float.
