@@ -68,13 +68,13 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	//this op= vec
 	void opOpAssign(string op, T)(auto ref in Vec!(D, T) o)
 	{
-		mixin(fer!("f[x]" ~ op ~ "= o.f[x];"));
+		mixin(fer!("f[x] = cast(F)(f[x]" ~ op ~ "o.f[x]);"));
 	}
 
 	//this op= scalar
 	void opOpAssign(string op, T)(T o) if(isVecType!T)
 	{
-		mixin(fer!("f[x]" ~ op ~ "= o;"));
+		mixin(fer!("f[x] = cast(F)(f[x]" ~ op ~ "o);"));
 	}
 
 	static if(is(F == float) || is(F == double))
