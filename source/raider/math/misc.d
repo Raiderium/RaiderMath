@@ -20,7 +20,7 @@ bool eq(T)(T a, T b)
 	T ab = fabs(a - b);
 	if(ab < T.epsilon) return true;
 	a = abs(a); b = abs(b);
-	return ab < F.epsilon * (b > a ? b : a);
+	return ab < T.epsilon * (b > a ? b : a);
 }
 
 ///Next higher power of two

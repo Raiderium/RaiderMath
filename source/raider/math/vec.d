@@ -4,7 +4,7 @@ import std.conv;
 import std.math;
 
 import raider.math.mat;
-import raider.math.misc : eq;
+static import raider.math.misc;
 
 alias Vec!(2, double) vec2;
 alias Vec!(3, double) vec3;
@@ -87,10 +87,12 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 
 		bool eq()(auto ref in Vec_ o)
 		{
-			foreach(x; 0..D) if(!eq(f[x], o[x])) return false;
+			foreach(x; 0..D) if(!raider.math.misc.eq(f[x], o[x])) return false;
 			return true;
 		}
 	}
+
+	static immutable Vec_ zero = Vec_();
 
 	//op this
 	Vec_ opUnary(string s)() if(s == "-")

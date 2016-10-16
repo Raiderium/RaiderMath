@@ -88,8 +88,8 @@ struct Mat(int _D, _F) if(2 <= _D && _D <= 4 && isMatType!_F)
 	{
 		this(T=int)(auto ref in Mat!(D+1, F) o, uint r, uint c)
 		{
-			assert(r < D);
-			assert(c < D);
+			assert(r < D+1);
+			assert(c < D+1);
 
 			foreach(ri; 0..D)
 				foreach(ci; 0..D)
@@ -251,7 +251,7 @@ struct Mat(int _D, _F) if(2 <= _D && _D <= 4 && isMatType!_F)
 			f[8] =  m8 * invdet;
 		}
 
-		Mat_ rotation(double angle, int axis)
+		static Mat_ rotation(double angle, int axis)
 		{
 			assert(0 <= axis && axis < D);
 			angle *= PI/180;
