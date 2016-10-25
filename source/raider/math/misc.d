@@ -1,5 +1,6 @@
 module raider.math.misc;
 
+import std.traits;
 import std.math;
 import raider.math.vec;
 
@@ -21,6 +22,26 @@ bool eq(T)(T a, T b)
 	if(ab < T.epsilon) return true;
 	a = abs(a); b = abs(b);
 	return ab < T.epsilon * (b > a ? b : a);
+}
+
+/**
+ * Float to normalised integer.
+ * Converts any float type in the range [0, 1] to a normalised 
+ * unsigned integer in range [0, T.max]. Input is clamped.
+ */
+T ftni(T, F)(F f) if(isIntegral!(T) && isUnsigned!(T) && isFloatingPoint!(F))
+{
+	return cast(T)(clamp(f, 0.0, 1.0) * cast(F)T.max);
+}
+
+/**
+ * Normalised integer to float.
+ * Converts a normalised unsigned integer in the 
+ * range [0, T.max] to any float type in the range [0, 1].
+ */
+F nitf(F, T)(T t) if(isIntegral!(T) && isUnsigned!(T) && isFloatingPoint!(F))
+{
+	return cast(F)(t) / cast(F)(T.max);
 }
 
 ///Next higher power of two
