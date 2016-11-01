@@ -1,7 +1,7 @@
 {
     "name": "raider-math",
     "version": "0.0.1",
-    "description": "A small math library in D.",
+    "description": "A small math library.",
     "homepage": "https://github.com/Raiderium/RaiderMath",
     "license": "MIT",
     "authors": ["Aiden Sibley"],
