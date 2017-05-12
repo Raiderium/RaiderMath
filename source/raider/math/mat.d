@@ -102,6 +102,11 @@ struct Mat(int _D, _F) if(2 <= _D && _D <= 4 && isMatType!_F)
 		foreach(x; 0..D*D) f[x] = cast(F) o[x];
 	}
 
+	this(T)(auto ref in Mat!(D, T) o)
+	{
+		foreach(x; 0..D*D) f[x] = cast(F) o.f[x];
+	}
+
 	void opAssign(T)(auto ref in Mat!(D, T) o)
 	{
 		foreach(x; 0..D*D) f[x] = cast(F) o.f[x];
@@ -115,7 +120,7 @@ struct Mat(int _D, _F) if(2 <= _D && _D <= 4 && isMatType!_F)
 	//matrix = this * matrix
 	Mat_ opBinary(string op)(auto ref in Mat_ o) if(op == "*")
 	{
-		Mat!(D, T) result;
+		Mat_ result;
 		foreach(i; 0..D)
 			foreach(j; 0..D)
 				foreach(k; 0..D)
