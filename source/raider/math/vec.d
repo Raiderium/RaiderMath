@@ -116,7 +116,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	//vec = this op vec
-	Vec!(D, typeof(T + F)) opBinary(string op, T)(auto ref in Vec!(D, T)o)
+	Vec!(D, typeof(T + F)) opBinary(string op, T)(auto ref in Vec!(D, T)o) const
 	{
 		typeof(return) r = void;
 		mixin(fer!("r[x] = f[x]" ~ op ~ " o[x];"));
@@ -124,7 +124,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	//vec = this op scalar
-	Vec!(D, typeof(T + F)) opBinary(string op, T)(T o) if(isVecType!T)
+	Vec!(D, typeof(T + F)) opBinary(string op, T)(T o) const if(isVecType!T)
 	{
 		typeof(return) r = void;
 		mixin(fer!("r[x] = f[x]" ~ op ~ " o;"));
@@ -133,7 +133,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 
 	///Returns a string containing the alias of the vec instantiation followed by its elements inside parentheses.
 	//eg vec3f(0.0, 1.2, 9.8)
-	string toString()
+	string toString() const
 	{
 		string result = "vec" ~ to!string(D);
 		static if(is(F == double)) result ~= "(";
@@ -151,7 +151,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	///Returns a copy with the absolute value of each element.
-	Vec_ abs()
+	Vec_ abs() const
 	{
 		Vec_ r = void;
 		mixin(fer!("r[x] = std.math.abs(f[x]);"));
@@ -159,7 +159,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	///Angle 'twixt this and another vec with same dimensions.
-	double angle(T)(auto ref in Vec!(D, T) o)
+	double angle(T)(auto ref in Vec!(D, T) o) const
 	{
 		Vec!(D, double) v = o;
 		Vec!(D, double) t = this;
@@ -194,7 +194,7 @@ struct Vec(int _D, _F) if( 2 <= _D && _D <= 4 && isVecType!_F)
 	}
 
 	///Squared length of vector.
-	@property double lengthSquared()
+	@property double lengthSquared() const
 	{
 		return dot(this, this);
 	}
