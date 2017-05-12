@@ -31,6 +31,9 @@ struct Aabb(int _D, _F) if(2 <= _D && _D <= 3 && isAabbType!_F)
 
 	this(T)(Vec!(D, T) v0, Vec!(D, T) v1) if(isAabbType!T) { f0 = v0; f1 = v1; }
 
+	@property Vec_ centre() { return Vec_((f0 + f1)*0.5); }
+	@property Vec_ radius() { return Vec_((f1 - f0)*0.5); }
+
 	void expand(Vec_ p)
 	{
 		mixin(fer!("if(p[x] > f1[x]) f1[x] = p[x]; else if(p[x] < f0[x]) f0[x] = p[x];"));
