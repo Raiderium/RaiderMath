@@ -1,0 +1,14 @@
+name "raider-math"
+version "0.0.1"
+description "A small math library."
+homepage "https://github.com/Raiderium/RaiderMath"
+license "MIT"
+authors "Aiden Sibley"
+
+targetName "RaiderMath"
+targetPath "lib"
+
+dependency "raider-tools" version=">0.0.0"
+
+
+
